@@ -2,7 +2,7 @@ import React from "react";
 import { Card, CardImg, CardText, CardBody, CardTitle} from "reactstrap";
 
 
-  function RenderComments({ comments }){
+  function RenderComments({comments}){
     if (comments !== null)
       return (
         <div className="col-12 col-md-5 m-1">
@@ -12,19 +12,19 @@ import { Card, CardImg, CardText, CardBody, CardTitle} from "reactstrap";
               return(
                   <li key={comment.id}>
                     <p>{comment.comment}</p>
-                    <p>-- {comment.author}, {new Intl.DateTimeFormat('en-US', { year: 'numeric', 
-                                                                                month: 'short', 
-                                                                                day: '2-digit'}).format(
-                                                                                  new Date(Date.parse(
-                                                                                      comment.date
-                                                                                      )
-                                                                                    )
-                                                                                  )
-                                              }
+                    <p>-- {comment.author}, 
+                    {new Intl.DateTimeFormat('en-US', 
+                                    { year: 'numeric', 
+                                      month: 'short', 
+                                      day: '2-digit'}).format(new Date(Date.parse(comment.date)
+                                          )
+                                        )
+                    }
                     </p>
                   </li>
               );
-            })}
+            })
+            }
           </ul> 
         </div>
       );
@@ -54,7 +54,7 @@ import { Card, CardImg, CardText, CardBody, CardTitle} from "reactstrap";
         <div className="container">
           <div className="row">
 
-              <RenderDish dish={ props.dish }/>
+            <RenderDish dish={ props.dish }/>
             <RenderComments comments={ props.dish.comments }/>
             
           </div>
