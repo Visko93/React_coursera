@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import { Card, CardImg, CardText, CardBody, CardTitle, Breadcrumb, BreadcrumbItem, Button, ModalBody, ModalHeader,
-Modal, Row, Label} from "reactstrap";
+Modal, Col, Row, Label} from "reactstrap";
 import { Link } from 'react-router-dom';
 import { Control, LocalForm, Errors} from 'react-redux-form';
+import { Loading } from './LoadingComponent';
 
 const required = (val) => val && val.length;
 const maxLength = (len) => (val) => !(val) || (val.length <= len);
@@ -25,8 +26,9 @@ class CommentForm extends Component {
     });
   }
   handleSubmit(values) {
-    console.log('Current State is: ' + JSON.stringify(values));
-    alert('Current State is: ' + JSON.stringify(values));
+    this.toggleModal();
+    // console.log('Current State is: ' + JSON.stringify(values));
+    this.props.addComment(this.props.dishId, values.rating, values.author, values.comment);
     // event.preventDefault();
 }
  
@@ -41,29 +43,21 @@ class CommentForm extends Component {
             <ModalBody >
                 <LocalForm onSubmit={(values) => this.handleSubmit(values)}>
                     <Row className="form-group">
+                      <Col>
                         <Label htmlFor="rating">Rating</Label>
                         <Control.select model=".rating" id="rating" name="rating"
-                                      className="form-control"
-                                      validators={{
-                                          required, minLength: minLength(3), maxLength: maxLength(15)
-                                      }}
-                                      >
+                                      className="form-control">
                         <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
                         <option value="4">4</option>
                         <option value="5">5</option>
                         </Control.select>
-                                      <Errors 
-                                          className="text-danger"
-                                          model=".firstname"
-                                          show="touched"
-                                          messages={{
-                                              required: 'Required '
-                                          }}
-                                      />
+                      </Col>
                     </Row>
+                    
                     <Row className="form-group">
+                      <Col>
                         <Label htmlFor="author">Your Name</Label>
                         <Control.text model=".author" id="author" name="author"
                                       placeholder="Your Name"
@@ -82,10 +76,12 @@ class CommentForm extends Component {
                                               maxLength: 'Must be 15 characters or less'
                                           }}
                                       />
+                      </Col>
                     </Row>
                     <Row className="form-group" >
-                        <Label check>Comment</Label>
-                        <Control.textarea model=".message" id="message" name="message"
+                      <Col>
+                        <Label htmlFor="comment">Comment</Label>
+                        <Control.textarea model=".comment" id="comment" name="comment"
                                         rows="6"
                                         className="form-control"  
                                         validators={{
@@ -94,14 +90,15 @@ class CommentForm extends Component {
                                         />
                                     <Errors
                                         className="text-danger"
-                                        model=".message"
+                                        model=".comment"
                                         show="touched"
                                         messages={{
                                             required: 'Digite sua mensagem. ',
                                         }}
                                     />
+                      </Col>
                     </Row>
-                    <Button type="submit" color="primary">Submit</Button>
+                    <Button type="submit" className="bg-primary" value="submit">Submit</Button>
                 </LocalForm>
             </ModalBody>
         </Modal>
@@ -111,7 +108,7 @@ class CommentForm extends Component {
 }
   
 
-function RenderComments({comments}){
+function RenderComments({comments, addComment, dishId}) {
     if (comments !== null)
       return (
         <div className="col-12 col-md-6 m-1">
@@ -133,10 +130,9 @@ function RenderComments({comments}){
                   </li>
               );
             })
-            }
-          <CommentForm />
+            }    
           </ul>
-          
+          <CommentForm dishId={dishId} addComment={addComment} />
         </div>
       );
 
@@ -160,6 +156,24 @@ function RenderComments({comments}){
      
 
   const DishDetail = (props) => { 
+    if (props.isLoading) {
+      return(
+        <div className="container">
+          <div className="row">
+            <Loading />
+          </div>
+        </div>
+      );
+    }
+    else if (props.errMess) {
+      return(
+        <div className="container">
+          <div className="row">
+            <h4>{props.errMess}</h4>
+          </div>
+        </div>
+      );
+    }
     if (props.dish != null) { 
       return ( 
         <div className="container">
@@ -180,8 +194,9 @@ function RenderComments({comments}){
           <div className="row">
 
             <RenderDish dish={ props.dish }/>
-            <RenderComments comments={ props.comments }/>
-            
+            <RenderComments comments={ props.comments }
+              addComment={props.addComment}
+              dishId={props.dish.id}/>
           </div>
         </div>
         
