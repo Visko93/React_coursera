@@ -1,12 +1,16 @@
-import React, { Component, useState } from 'react';
+import React, { useState } from 'react';
 import { Navbar, NavbarBrand, NavbarToggler, Nav, Collapse, NavItem, Jumbotron, Modal, Button, ModalBody, ModalHeader, Form,
      FormGroup, Label, Input } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
+import { useRef } from 'react';
 
 function Header (props) {
 
     const [isNavOpen, setIsNavOpen] = useState(false)
     const [isModalOpen, setIsModalOpen] = useState(false)
+    const username = useRef('')
+    const password = useRef('')
+    const remember = useRef(false)
 
     function toggleModal(){
         setIsModalOpen(prevState => !prevState);
@@ -82,18 +86,18 @@ function Header (props) {
                             <FormGroup>
                                 <Label htmlFor="username">Username</Label>
                                 <Input type="text" id="username" name="username"
-                                innerRef={(input)=> username = input} />
+                                innerRef={(input)=> username.current = input} />
                             </FormGroup>
                             <FormGroup>
                                 <Label htmlFor="password">Password</Label>
                                 <Input type="password" id="password" name="password"
                                 //recuperando os valores adicionados pelo usuário
-                                innerRef={(input)=> password = input} />
+                                innerRef={(input)=> password.current = input} />
                             </FormGroup>
                             <FormGroup check>
                                 <Label check>
                                     <Input type="checkbox" name="remember" 
-                                    innerRef={(input)=> remember = input}/>
+                                    innerRef={(input)=> remember.current = input}/>
                                     Remember Me  
                                 </Label>
                             </FormGroup>

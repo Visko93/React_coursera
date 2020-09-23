@@ -40,11 +40,11 @@ function Main (props){
     const HomePage = () => {
       return(
         <Home 
-          dish={ this.props.dishes.dishes.filter((dish) => dish.featured)[0] }
-          dishesLoading={this.props.dishes.isLoading}
-          dishesErrMess={this.props.dishes.errMess}
-          leaders={ this.props.leaders.filter((leader) => leader.featured)[0] }
-          promotions={ this.props.promotions.filter((promo) => promo.featured)[0] }
+          dish={ props.dishes.dishes.filter((dish) => dish.featured)[0] }
+          dishesLoading={props.dishes.isLoading}
+          dishesErrMess={props.dishes.errMess}
+          leaders={ props.leaders.filter((leader) => leader.featured)[0] }
+          promotions={ props.promotions.filter((promo) => promo.featured)[0] }
         />
       );
     }
