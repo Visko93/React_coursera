@@ -1,49 +1,36 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import { Navbar, NavbarBrand, NavbarToggler, Nav, Collapse, NavItem, Jumbotron, Modal, Button, ModalBody, ModalHeader, Form,
      FormGroup, Label, Input } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
 
-class Header extends Component {
-    
-    constructor(props) {
-        super(props);
-        this.state = {
-            isNavOpen: false,
-            isModalOpen: false
-        };
-        this.toggleNav = this.toggleNav.bind(this);
-        this.toggleModal = this.toggleModal.bind(this);
-        this.handleLogin = this.handleLogin.bind(this);
-        
+function Header (props) {
+
+    const [isNavOpen, setIsNavOpen] = useState(false)
+    const [isModalOpen, setIsModalOpen] = useState(false)
+
+    function toggleModal(){
+        setIsModalOpen(prevState => !prevState);
     }
 
-    toggleModal(){
-        this.setState({
-            isModalOpen: !this.state.isModalOpen
-        });
-    }
-
-    toggleNav(){
-        this.setState({
-            isNavOpen: !this.state.isNavOpen
-        });
-    }
+    function toggleNav(){
+        setIsNavOpen(prevState => !prevState);
+    }    
     //alert é para chegar se o this.toogleModal() está passando os dados corretamente
-    handleLogin(event){
-        this.toggleModal();
-        alert("Username: " + this.username.value + "Password: " +this.password.value + "Remember: " + this.remember.checked);
+    function handleLogin(event){
         event.preventDefault();
+        toggleModal();
+        alert("Username: " + username.value + "Password: " +password.value + "Remember: " + remember.checked);
     }
-    render () {
+
         return (
             <>
                 <Navbar dark expand="md">
                     <div className="container">
-                        <NavbarToggler onClick={this.toggleNav} />
+                        <NavbarToggler onClick={toggleNav} />
                         <NavbarBrand className="mr-auto" href="/">      
                             <img src="../assets/images/logo.png" height="30" width="41" alt="Ristorante Con Fusion"/>
                         </NavbarBrand>
-                            <Collapse isOpen={this.state.isNavOpen} navbar>
+                            <Collapse isOpen={isNavOpen} navbar>
                                 <Nav navbar>
                                     <NavItem>
                                         <NavLink className="nav-link" to="/home">
@@ -68,7 +55,7 @@ class Header extends Component {
                                 </Nav>
                                 <Nav className="ml-auto" navbar>
                                     <NavItem>
-                                        <Button outline onClick={this.toggleModal}>
+                                        <Button outline onClick={toggleModal}>
                                             <span className="fa fa-sign-in fa-lg"></span> Login
                                         </Button>
                                     </NavItem>
@@ -88,25 +75,25 @@ class Header extends Component {
                         </div>    
                     </div>
                 </Jumbotron>
-                <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
-                    <ModalHeader toggle={this.toggleModal}>Login</ModalHeader>
+                <Modal isOpen={isModalOpen} toggle={toggleModal}>
+                    <ModalHeader toggle={toggleModal}>Login</ModalHeader>
                     <ModalBody>
-                        <Form onSubmit={this.handleLogin}>
+                        <Form onSubmit={handleLogin}>
                             <FormGroup>
                                 <Label htmlFor="username">Username</Label>
                                 <Input type="text" id="username" name="username"
-                                innerRef={(input)=> this.username = input} />
+                                innerRef={(input)=> username = input} />
                             </FormGroup>
                             <FormGroup>
                                 <Label htmlFor="password">Password</Label>
                                 <Input type="password" id="password" name="password"
                                 //recuperando os valores adicionados pelo usuário
-                                innerRef={(input)=> this.password = input} />
+                                innerRef={(input)=> password = input} />
                             </FormGroup>
                             <FormGroup check>
                                 <Label check>
                                     <Input type="checkbox" name="remember" 
-                                    innerRef={(input)=> this.remember = input}/>
+                                    innerRef={(input)=> remember = input}/>
                                     Remember Me  
                                 </Label>
                             </FormGroup>
@@ -116,8 +103,6 @@ class Header extends Component {
                 </Modal>
             </>
         );
-       
-    }
 }
 
 export default Header;

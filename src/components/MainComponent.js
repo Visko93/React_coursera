@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import Header from './HeaderComponent';
 import Home from './HomeComponent';
 import About from './AboutusComponent'
@@ -31,31 +31,32 @@ const mapDispatchToProps = dispatch => ({
 
 });
 
-class Main extends Component {
+function Main (props){
 
-  componentDidMount() {
-    this.props.fetchDishes();
-  }
-  render() {
-  
+  useEffect(()=>{
+    props.fetchDishes();
+  },[]) 
+
     const HomePage = () => {
       return(
-        <Home dish={ this.props.dishes.dishes.filter((dish) => dish.featured)[0] }
-        dishesLoading={this.props.dishes.isLoading}
-        dishesErrMess={this.props.dishes.errMess}
-        leaders={ this.props.leaders.filter((leader) => leader.featured)[0] }
-        promotions={ this.props.promotions.filter((promo) => promo.featured)[0] }
+        <Home 
+          dish={ this.props.dishes.dishes.filter((dish) => dish.featured)[0] }
+          dishesLoading={this.props.dishes.isLoading}
+          dishesErrMess={this.props.dishes.errMess}
+          leaders={ this.props.leaders.filter((leader) => leader.featured)[0] }
+          promotions={ this.props.promotions.filter((promo) => promo.featured)[0] }
         />
       );
     }
 
     const DishWithId = ({match}) => {
       return (
-        <DishDetail dish={this.props.dishes.dishes.filter((dish) => dish.id === parseInt(match.params.dishId,10))[0]}
-        dishesLoading={this.props.dishes.isLoading}
-        dishesErrMess={this.props.dishes.errMess}
-        comments={this.props.comments.filter((comment) => comment.dishId === parseInt(match.params.dishId,10))}
-        addComment={this.props.addComment}
+        <DishDetail 
+          dish={props.dishes.dishes.filter((dish) => dish.id === parseInt(match.params.dishId,10))[0]}
+          dishesLoading={props.dishes.isLoading}
+          dishesErrMess={props.dishes.errMess}
+          comments={props.comments.filter((comment) => comment.dishId === parseInt(match.params.dishId,10))}
+          addComment={props.addComment}
       />
       );
     }
@@ -65,16 +66,15 @@ class Main extends Component {
         <Header/>
           <Switch>
             <Route path="/home" component={ HomePage } />
-            <Route path="/aboutus" component={ () => <About leaders={ this.props.leaders }/> } />
-            <Route exact path="/menu" component={ () => <Menu dishes={ this.props.dishes }/> } />
+            <Route path="/aboutus" component={ () => <About leaders={ props.leaders }/> } />
+            <Route exact path="/menu" component={ () => <Menu dishes={ props.dishes }/> } />
             <Route path="/menu/:dishId" component={DishWithId}/>
-            <Route exact path="/contactus" component={ () => <Contact resetFeedbackForm={this.props.resetFeedbackForm}/> }/>
+            <Route exact path="/contactus" component={ () => <Contact resetFeedbackForm={props.resetFeedbackForm}/> }/>
             <Redirect to="/home" />
           </Switch>
         <Footer/>
       </div>
     );
   }
-}
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Main));
